@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .task {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task.completed {
+            background-color: #e0ffe0;
+        }
+        .priority {
+            font-weight: bold;
+        }
+        .high { color: red; }
+        .normal { color: orange; }
+        .low { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Todo List</h1>
+    <form action="/add" method="post">
+        <input type="text" name="description" placeholder="Enter task description" required>
+        <select name="priority">
+            <option value="high">High</option>
+            <option value="normal" selected>Normal</option>
+            <option value="low">Low</option>
+        </select>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <h2>Tasks</h2>
+    {% if tasks %}
+        {% for task in tasks %}
+            <div class="task {% if task.completed %}completed{% endif %}">
+                <span>{{ task.description }}</span>
+                <span class="priority {{ task.priority }}">{{ task.priority|capitalize }}</span>
+                {% if not task.completed %}
+                    <a href="{{ url_for('complete_task', task_index=loop.index0) }}">Mark as Done</a>
+                {% else %}
+                    <span>Completed</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No tasks available.</p>
+    {% endif %}
+</body>
+</html>
